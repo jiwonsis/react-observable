@@ -2,18 +2,26 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, combineReducers} from 'redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {Provider} from 'react-redux';
 import reducer from './reducers';
+import userReducer from './reducers/users';
 
-import {createEpicMiddleware} from 'redux-observable';
-import {rootEpic} from "./epics";
+import {createEpicMiddleware, combineEpics} from 'redux-observable';
+import {loadStoriesEpic} from "./epics";
+import {fetchUserEpic} from './epics/userEpic';
 
+const rootEpic = combineEpics(loadStoriesEpic, fetchUserEpic);
+
+const rootReducer = combineReducers({
+	story: reducer,
+	user: userReducer,
+});
 
 const epicMiddleware = createEpicMiddleware();
 const store = createStore(
-    reducer,
+	rootReducer,
 	composeWithDevTools(
 	    applyMiddleware(epicMiddleware)
     )

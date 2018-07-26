@@ -11,11 +11,11 @@ export const Stories = (props) => (
 );
 
 const StoryList = (props) => (
-    props.items.length === 0 ?
-        null :
-        <React.Fragment>
-            {props.items.map(item => <Story {...item} key={item.id} />)}
-        </React.Fragment>
+	props.story.items.length === 0 ?
+		null :
+		<React.Fragment>
+			{props.story.items.map(item => <Story {...item} key={item.id} />)}
+		</React.Fragment>
 );
 
 const Story = (props) => (
