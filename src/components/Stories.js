@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { loadStories, clear } from "../actions";
+import {connect} from 'react-redux';
+import {loadStories, clear} from "../actions";
 
 export const Stories = (props) => (
     <React.Fragment>

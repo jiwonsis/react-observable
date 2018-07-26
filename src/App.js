@@ -3,11 +3,11 @@ import Stories from "./components/Stories";
 
 class App extends Component {
   render() {
-      return (
-          <div className="App">
-              <Stories/>
-          </div>
-      );
+    return (
+      <div className="App">
+          <Stories/>
+      </div>
+    );
   }
 }
 
