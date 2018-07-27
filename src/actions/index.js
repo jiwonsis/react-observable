@@ -1,5 +1,8 @@
-export const LOAD_STORIES = 'LOAD_STORIES';
-export const CLEAR_STORIES = 'CLEAR_STORIES';
+import * as stories from './storiesAction';
+import * as users from './usersAction';
 
-export const loadStories = () => ({ type: LOAD_STORIES });
-export const clear = () => ({ type: CLEAR_STORIES });
+const rootAction = {
+	stories, users
+};
+
+export default  rootAction;
