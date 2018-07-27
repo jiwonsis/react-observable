@@ -1,6 +1,21 @@
-// 더미 JSON DATA
-import actions from "../actions";
+import {switchMap, delay} from 'rxjs/operators'
+import {of} from 'rxjs';
+import {ofType} from 'redux-observable';
+import {combineEpics} from 'redux-observable';
 
+// ACTION PART
+export const LOAD_STORIES = 'LOAD_STORIES';
+export const CLEAR_STORIES = 'CLEAR_STORIES';
+
+const loadStories = () => ({ type: LOAD_STORIES });
+const clear = () => ({ type: CLEAR_STORIES });
+
+const action = {
+	loadStories,
+	clear,
+};
+
+//  REDUCER PART
 const stories = [
 	{
 		"by": "bleakgadfly",
@@ -27,13 +42,13 @@ const initialState = {
 	items: [],
 };
 
-export const storiesReducer = (state=initialState, action) => {
+const storiesReducer = (state=initialState, action) => {
 	switch (action.type) {
-		case actions.stories.LOAD_STORIES:
+		case LOAD_STORIES:
 			return {
 				items: stories.slice(),
 			};
-		case actions.stories.CLEAR_STORIES:
+		case CLEAR_STORIES:
 			return {
 				items: [],
 			};
@@ -41,4 +56,21 @@ export const storiesReducer = (state=initialState, action) => {
 	}
 };
 
-export default storiesReducer;
+const reducer = {
+	stories: storiesReducer,
+};
+
+// EPIC PART
+const loadStoriesEpic = action$ =>
+	action$.pipe(
+		ofType(LOAD_STORIES),
+		switchMap(() => of(clear()).pipe(
+			delay(3000)
+		)),
+	);
+
+const epic = combineEpics(
+	loadStoriesEpic,
+);
+
+export default { action, reducer, epic }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {User} from './User';
-import {fetchUserAction} from "../actions/usersAction";
+import users from "../store/modules/users";
 
 export const Users = (props) => (
 	<div>
@@ -30,7 +30,7 @@ const mapState = (state) => (
 );
 
 const mapDispatch = (dispatch) => ({
-	loadUser: (login) => dispatch(fetchUserAction(login))
+	loadUser: (login) => dispatch(users.action.fetchUserAction(login))
 });
 
 export default connect(mapState, mapDispatch)(Users);

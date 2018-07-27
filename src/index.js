@@ -7,7 +7,7 @@ import {
 	Route,
 } from 'react-router-dom';
 import {Provider} from 'react-redux';
-import store, {epicRun} from "./Store";
+import store, {epicRun} from "./store";
 
 epicRun();
 

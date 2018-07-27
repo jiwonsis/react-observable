@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import actions from "../actions";
+import stories from "../store/modules/stories";
 
 export const Stories = (props) => (
     <React.Fragment>
@@ -27,8 +27,8 @@ const mapState = (state) => (
 );
 
 const mapDispatch = (dispatch) => ({
-    loadStories: () => dispatch(actions.stories.loadStories()),
-    clear: () => dispatch(actions.stories.clear())
+	loadStories: () => dispatch(stories.action.loadStories()),
+    clear: () => dispatch(stories.action.clear())
 });
 
 export default connect(mapState, mapDispatch)(Stories);
