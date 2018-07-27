@@ -6,7 +6,6 @@ const NetStories = (props) => (
 	props.netStories.loading ?
 		<p>로딩 중...</p> :
 		<Fragment>
-			{console.log(props)}
 			<button type="button" onClick={props.loadStories}>
 				탑 5개의 스토리 불러오기
 			</button>
@@ -18,7 +17,6 @@ const NetStories = (props) => (
 
 const StoryList = (props) => (
 	<ul>
-		{console.log(props)}
 		{props.stories.map(story =>
 			<li key={story.id}>
 				<a href={story.url}>{story.title}</a>
