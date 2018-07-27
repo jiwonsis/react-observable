@@ -4,8 +4,8 @@ import {ofType} from 'redux-observable';
 import {combineEpics} from 'redux-observable';
 
 // ACTION PART
-export const LOAD_STORIES = 'LOAD_STORIES';
-export const CLEAR_STORIES = 'CLEAR_STORIES';
+const LOAD_STORIES = 'LOAD_STORIES';
+const CLEAR_STORIES = 'CLEAR_STORIES';
 
 const loadStories = () => ({ type: LOAD_STORIES });
 const clear = () => ({ type: CLEAR_STORIES });

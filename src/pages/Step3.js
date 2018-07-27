@@ -1,7 +1,8 @@
 import React from 'react';
+import NetStories from "../components/NetStories";
 
 const Step3 = () => (
-	<h1>Step3</h1>
+	<NetStories />
 );
 
 export default Step3;
