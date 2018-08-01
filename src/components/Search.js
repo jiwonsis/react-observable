@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Search = ({defaultValue, onChange}) => (
+export const Search = ({defaultValue, onChange, messages}) => (
 	<div className="Search">
 		<input
 			type="text"
@@ -8,6 +8,21 @@ export const Search = ({defaultValue, onChange}) => (
 			defaultValue={defaultValue}
 			onChange={(e) => onChange(e.target.value)}
 		/>
+		{
+			console.log(messages)
+		}
+		{
+			messages &&
+			messages.length > 0 && (
+				<ul>
+					{messages.map(message =>
+						<li key={message.text} className={`Message Message--${message.type}`}>
+							{message.text}
+						</li>
+					)}
+				</ul>
+			)
+		}
 	</div>
 );
 

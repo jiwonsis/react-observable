@@ -16,6 +16,7 @@ class Step4 extends Component {
 				<Search
 					defaultValue={''}
 					onChange={this.handleBeerSearch}
+					messages={this.props.beer.messages}
 				/>
 				{
 					this.props.beer &&
