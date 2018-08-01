@@ -1,12 +1,13 @@
 import {ajax} from 'rxjs/ajax';
-import {throwError, of} from 'rxjs'
-import {debounceTime, switchMap, map, catchError} from 'rxjs/operators';
+import {throwError, of, merge} from 'rxjs'
+import {debounceTime, switchMap, map, catchError, filter} from 'rxjs/operators';
 import {ofType, combineEpics} from "redux-observable";
 
 // ACTIONS PARTS
 const SEARCHED_BEERS = 'beer/SEARCHED_BEERS';
 const RECEIVED_BEERS = 'beer/RECEIVED_BEERS';
-const SEARCHD_BEERS_ERROR = 'beer/SEARCHD_BEERS_ERROR';
+const SEARCHED_BEERS_ERROR = 'beer/SEARCHED_BEERS_ERROR';
+const SEARCHED_BEERS_LOADING = 'beer/SEARCHED_BEERS_LOADING';
 
 const searchBeersAction = (query = '') => ({
 	type: SEARCHED_BEERS,
@@ -17,8 +18,12 @@ const receiveBeersAction = (beers = []) => ({
 	payload: beers,
 });
 const searchBeersErrorAction = (error) => ({
-	type: SEARCHD_BEERS_ERROR,
+	type: SEARCHED_BEERS_ERROR,
 	payload: error.message,
+});
+const searchBeersLoadingAction = (loading) => ({
+	type: SEARCHED_BEERS_LOADING,
+	payload: loading,
 });
 
 const action = {
@@ -37,7 +42,6 @@ const beerReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case SEARCHED_BEERS: return {
 			...state,
-			loading: true,
 			messages: [],
 		};
 		case RECEIVED_BEERS: return {
@@ -45,10 +49,14 @@ const beerReducer = (state = initialState, action) => {
 			beers: action.payload,
 			loading: false,
 		};
-		case SEARCHD_BEERS_ERROR: return {
+		case SEARCHED_BEERS_ERROR: return {
 			...state,
 			loading: false,
 			messages: [{type: 'error', text: action.payload}],
+		};
+		case SEARCHED_BEERS_LOADING: return {
+			...state,
+			loading: action.payload,
 		};
 		default: return state;
 	}
@@ -70,12 +78,17 @@ const searchBeerEpic = actions$ =>
 	actions$.pipe(
 		ofType(SEARCHED_BEERS),
 		debounceTime(500),
-		switchMap(({payload}) => receiveData(payload).pipe(
-			map(data => receiveBeersAction(data)),
-			catchError(err =>
-				of(searchBeersErrorAction(err))
-			)
-		)),
+		filter(action => action.payload !== ''),
+		switchMap(({payload}) => {
+			const loading = of(searchBeersLoadingAction(true));
+			const request = receiveData(payload).pipe(
+				map(data => receiveBeersAction(data)),
+				catchError(err =>
+					of(searchBeersErrorAction(err))
+				)
+			);
+			return merge(loading, request);
+		}),
 	);
 
 const epic = combineEpics(
