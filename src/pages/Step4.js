@@ -17,6 +17,8 @@ class Step4 extends Component {
 					defaultValue={''}
 					onChange={this.handleBeerSearch}
 					messages={this.props.beer.messages}
+					loading={this.props.beer.loading}
+					onCancel={this.props.cancelSearch}
 				/>
 				{
 					this.props.beer &&
@@ -30,5 +32,7 @@ class Step4 extends Component {
 
 export default connect(
 	(state)=> state,
-	{searchBeersAction: beer.action.searchBeersAction}
-	)(Step4);
+	{
+		searchBeersAction: beer.action.searchBeersAction,
+		cancelSearch: beer.action.cancelSearchAction,
+	})(Step4);

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Search = ({defaultValue, onChange, messages}) => (
+export const Search = ({defaultValue, onChange, messages, loading, onCancel}) => (
 	<div className="Search">
 		<input
 			type="text"
@@ -8,9 +8,9 @@ export const Search = ({defaultValue, onChange, messages}) => (
 			defaultValue={defaultValue}
 			onChange={(e) => onChange(e.target.value)}
 		/>
-		{
-			console.log(messages)
-		}
+		{ loading && (
+			<button type="button" onClick={onCancel}>취소</button>
+		)}
 		{
 			messages &&
 			messages.length > 0 && (

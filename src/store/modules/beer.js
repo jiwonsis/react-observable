@@ -1,6 +1,6 @@
 import {ajax} from 'rxjs/ajax';
 import {throwError, of, merge} from 'rxjs'
-import {debounceTime, switchMap, map, catchError, filter} from 'rxjs/operators';
+import {debounceTime, switchMap, map, catchError, filter, takeUntil, delay} from 'rxjs/operators';
 import {ofType, combineEpics} from "redux-observable";
 
 // ACTIONS PARTS
@@ -8,6 +8,8 @@ const SEARCHED_BEERS = 'beer/SEARCHED_BEERS';
 const RECEIVED_BEERS = 'beer/RECEIVED_BEERS';
 const SEARCHED_BEERS_ERROR = 'beer/SEARCHED_BEERS_ERROR';
 const SEARCHED_BEERS_LOADING = 'beer/SEARCHED_BEERS_LOADING';
+const CANCEL_SEARCH = 'beer/CANCEL_SEARCH';
+const NAVIGATE = 'beer/NAVIGATE';
 
 const searchBeersAction = (query = '') => ({
 	type: SEARCHED_BEERS,
@@ -25,10 +27,14 @@ const searchBeersLoadingAction = (loading) => ({
 	type: SEARCHED_BEERS_LOADING,
 	payload: loading,
 });
+const cancelSearchAction = () => ({
+	type: CANCEL_SEARCH
+});
 
 const action = {
 	searchBeersAction,
 	receiveBeersAction,
+	cancelSearchAction,
 };
 
 // REDUCER PARTS
@@ -58,6 +64,10 @@ const beerReducer = (state = initialState, action) => {
 			...state,
 			loading: action.payload,
 		};
+		case CANCEL_SEARCH: return {
+			...state,
+			loading: false,
+		};
 		default: return state;
 	}
 };
@@ -77,12 +87,13 @@ const receiveData = term =>
 const searchBeerEpic = actions$ =>
 	actions$.pipe(
 		ofType(SEARCHED_BEERS),
-		debounceTime(500),
 		filter(action => action.payload !== ''),
 		switchMap(({payload}) => {
 			const loading = of(searchBeersLoadingAction(true));
 			const request = receiveData(payload).pipe(
-				map(data => receiveBeersAction(data)),
+				delay(5000),
+				takeUntil(actions$.pipe(ofType(CANCEL_SEARCH))),
+				map(receiveBeersAction),
 				catchError(err =>
 					of(searchBeersErrorAction(err))
 				)
