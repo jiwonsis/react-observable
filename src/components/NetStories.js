@@ -23,7 +23,7 @@ const StoryList = (props) => (
 			</li>
 		)}
 	</ul>
-)
+);
 
 const mapState = (state) => state;
 const mapDispatch = (dispatch) => ({
